@@ -5,13 +5,11 @@ puppeteer.use(StealthPlugin());
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
-
 async function start() {
   const browser = await puppeteer.launch({
-    executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
-   //headless: false,
+    //Если нижнюю строчку закоментировать то программа будет работать в фоне
+    headless: false,
     defaultViewport: false,
-    userDataDir: "./tmp",
   });
   const page = await browser.newPage();
 
@@ -38,7 +36,7 @@ async function start() {
   //////////////////////////////
 
   let links = await page.$$(link);
-console.log(links.length);
+  console.log(links.length);
   for (const el of links) {
     let linkId = await el.evaluate((el) => {
       let div = el.closest("div");
@@ -81,20 +79,17 @@ console.log(links.length);
       await sleep(1000);
       console.log(timer);
       const frame = await frameHandle.contentFrame();
-      console.log(1);
       await sleep(3000);
       let noYoutubeButton = false;
-      console.log(2);
       try {
         await frame.waitForSelector(
           ".ytp-large-play-button.ytp-button.ytp-large-play-button-red-bg"
         );
-        console.log(2.5);
+
         await sleep(500);
         await frame.click(
           ".ytp-large-play-button.ytp-button.ytp-large-play-button-red-bg"
         );
-        console.log(3);
       } catch (error) {
         console.log("Oshipka poiska knopki", error);
         noYoutubeButton = true;
